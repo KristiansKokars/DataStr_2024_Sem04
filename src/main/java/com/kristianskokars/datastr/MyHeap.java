@@ -93,7 +93,7 @@ public class MyHeap<Ttype> {
     private void printRecursively(int indexOfElement) {
         Ttype element = heap[indexOfElement];
 
-        System.out.println("P: " + element + " ");
+        System.out.print("P: " + element + " ");
 
         int leftChildIndex = indexOfElement * 2 + 1;
         int rightChildIndex = leftChildIndex + 1;
