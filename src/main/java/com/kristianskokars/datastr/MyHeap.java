@@ -66,7 +66,7 @@ public class MyHeap<Ttype> {
         Ttype prioElement = heap[0];
         heap[0] = heap[counter - 1];
         counter--;
-        //TODO reaheapDown()
+        reheapDown(0);
         return prioElement;
 
     }
@@ -83,6 +83,33 @@ public class MyHeap<Ttype> {
     }
 
     //TODO print() - rekursīvo
+    public void print2() throws Exception {
+        if (isEmpty()) throw new Exception("Array is empty and it "
+                + "is not possible to print elements");
+
+        printRecursively(0);
+    }
+
+    private void printRecursively(int indexOfElement) {
+        Ttype element = heap[indexOfElement];
+
+        System.out.println("P: " + element + " ");
+
+        int leftChildIndex = indexOfElement * 2 + 1;
+        int rightChildIndex = leftChildIndex + 1;
+
+        if (leftChildIndex < counter) {
+            Ttype leftChild = heap[leftChildIndex];
+            System.out.println("LC: " + leftChild + " [" + element + "]");
+            printRecursively(leftChildIndex);
+        }
+
+        if (rightChildIndex < counter) {
+            Ttype rightChild = heap[rightChildIndex];
+            System.out.println("RC: " + rightChild + " [" + element + "]");
+            printRecursively(rightChildIndex);
+        }
+    }
 
     public void makeEmpty() {
         counter = 0;
@@ -115,16 +142,22 @@ public class MyHeap<Ttype> {
         // 1. noskaidrot kreisā bērna indeksu
         // 2. noskaidrot labā bērna indeksu
 
-        int leftIndex = indexOfElement * 2;
-        int rightIndex = leftIndex + 1;
+        int leftIndex = indexOfElement * 2 + 1;
+        int rightIndex = leftIndex + 2;
 
         // noskaidrot cik bērni ir
         int childCount = 0;
-        if (leftIndex < counter - 1) {
+        if (leftIndex < counter) {
             childCount++;
         }
-        if (rightIndex < counter - 1) {
+        if (rightIndex < counter) {
             childCount++;
+        }
+
+        // var šo gadījumu dzēst ārā ja negrib agri izbeigt funkciju
+        if (childCount == 0) {
+            // mēs visu esam sakārtojuši, beidzam darbību?
+            return;
         }
 
         if (childCount == 1) {
@@ -133,7 +166,6 @@ public class MyHeap<Ttype> {
 
             if (((Comparable) leftChild).compareTo(parent) > 0) {
                 swap(leftIndex, indexOfElement);
-                reheapDown(leftIndex);
             }
         }
 
@@ -142,12 +174,21 @@ public class MyHeap<Ttype> {
             Ttype rightChild = heap[rightIndex];
             Ttype parent = heap[indexOfElement];
 
+            // TODO: nested ifs not great
             if (((Comparable) leftChild).compareTo(rightChild) > 0) {
-                swap(leftIndex, indexOfElement);
-                reheapUp(leftIndex);
+                if (((Comparable) leftChild).compareTo(parent) > 0) {
+                    swap(leftIndex, indexOfElement);
+                    reheapDown(leftIndex);
+                }
             } else {
-                swap(rightIndex, indexOfElement);
-                reheapUp(rightIndex);
+                // compareTo
+                // atgriež 1 ja ir lielāks
+                // atgriež 0 ja ir vienāds
+                // atgriež -1 ja ir mazāks
+                if (((Comparable) rightChild).compareTo(parent) > 0) {
+                    swap(rightIndex, indexOfElement);
+                    reheapDown(rightIndex);
+                }
             }
         }
     }
